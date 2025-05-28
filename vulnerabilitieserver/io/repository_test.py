@@ -1,44 +1,64 @@
 import pytest
-from vulnerabilitieserver.io.repository import Repository
+from vulnerabilitieserver.io.repository import Repository, Filter
 
 
 class DummyItem:
-    def __init__(self, id, value):
+    def __init__(self, id=None, value=None):
         self.id = id
         self.value = value
 
 
-def test_repository_find_added_item():
-    repo = Repository()
-    item = DummyItem(1, "foo")
-    repo.add(item)
-    assert repo.find(1) == item
+@pytest.mark.asyncio
+async def test_repository_add_and_find_returns_item():
+    repo = Repository[DummyItem]()
+    item = DummyItem(value="foo")
+    await repo.add(item)
+    found = await repo.find(item.id)
+    assert found is item
+    assert found.value == "foo"
 
 
-def test_repository_get_all_items():
-    repo = Repository()
-    item1 = DummyItem(1, "foo")
-    item2 = DummyItem(2, "bar")
-    repo.add(item1)
-    repo.add(item2)
-    all_items = repo.all()
-    assert item1 in all_items and item2 in all_items
+@pytest.mark.asyncio
+async def test_repository_all_returns_all_items():
+    repo = Repository[DummyItem]()
+    item1 = DummyItem(value="foo")
+    item2 = DummyItem(value="bar")
+    await repo.add(item1)
+    await repo.add(item2)
+    all_items = await repo.all()
+    assert item1 in all_items
+    assert item2 in all_items
     assert len(all_items) == 2
 
 
-def test_repository_update_item():
-    repo = Repository()
-    item = DummyItem(1, "foo")
-    repo.add(item)
-    updated_item = DummyItem(1, "bar")
-    repo.update(updated_item)
-    assert repo.find(1).value == "bar"
+@pytest.mark.asyncio
+async def test_repository_update_changes_item():
+    repo = Repository[DummyItem]()
+    item = DummyItem(value="foo")
+    await repo.add(item)
+    item.value = "bar"
+    await repo.update(item)
+    found = await repo.find(item.id)
+    assert found.value == "bar"
 
 
-def test_repository_delete_item():
-    repo = Repository()
-    item = DummyItem(1, "foo")
-    repo.add(item)
-    repo.delete(1)
+@pytest.mark.asyncio
+async def test_repository_delete_removes_item():
+    repo = Repository[DummyItem]()
+    item = DummyItem(value="foo")
+    await repo.add(item)
+    await repo.delete(item.id)
     with pytest.raises(KeyError):
-        repo.find(1)
+        await repo.find(item.id)
+
+
+@pytest.mark.asyncio
+async def test_repository_query_filters_and_limits():
+    repo = Repository[DummyItem]()
+    for i in range(5):
+        await repo.add(DummyItem(value=i))
+    # Filter for value >= 2
+    filters = [Filter(name="value", op=">=", value=2)]
+    results = await repo.query(filters, limit=2)
+    assert all(item.value >= 2 for item in results)
+    assert len(results) == 2
