@@ -3,6 +3,8 @@
 
 # Setup the project 
 
+Ensure you have python 3.12.10 installed.
+
 1. Create the virtual env
 ```
 python -m venv .venv
