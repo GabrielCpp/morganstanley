@@ -3,19 +3,16 @@ from vulnerabilitieserver.models.vulnerability import Vulnerability
 
 
 class Dependency(BaseModel):
-    """
-    A class representing a software dependency.
+    id: int = 0
 
-    Attributes:
-        name (str): The name of the dependency.
-        version (str): The version of the dependency.
-        description (str): A brief description of the dependency.
-        license (str): The license under which the dependency is released.
-    """
-
-    id: int
+    # The name of the dependency. eg. pandas
     name: str
+
+    # The version of the dependency. eg: 0.2.1
     version: str
-    description: str
-    license: str
+
+    # The application to which it relate to
+    application_id: int
+
+    # Vulnerabilities associated with the depedency
     vulnerabilities: list[Vulnerability] = Field(default_factory=list)
