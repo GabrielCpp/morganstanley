@@ -21,7 +21,7 @@ async def get_dependencies(
 
 # Provide details about a specific dependency, including usage
 # and associated vulnerabilities
-@router.get("/dependencies/{:dependency_id}", tags=["dependencies"])
+@router.get("/dependencies/{dependency_id}", tags=["dependencies"])
 async def get_dependency_details(
     dependency_id: int,
     dependency_service: Annotated[

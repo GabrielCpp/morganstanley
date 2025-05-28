@@ -22,7 +22,7 @@ async def get_applications(
 
 # Retrieve the dependencies for a specified application
 # and identify which of these dependencies are vulnerable.
-@router.get("/applications/{:application_id}/dependencies", tags=["applications"])
+@router.get("/applications/{application_id}/dependencies", tags=["applications"])
 async def get_application_dependencies(
     application_id: int,
     dependency_service: Annotated[

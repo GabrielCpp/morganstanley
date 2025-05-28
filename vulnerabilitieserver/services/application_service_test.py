@@ -61,7 +61,7 @@ async def test_application_service_find_applications(application_service, applic
 
     assert page == Page(
         limit=1,
-        next_page_token='Mg==',
+        next_page_token="Mg==",
         data=[
             Application(
                 id=1,
@@ -74,7 +74,7 @@ async def test_application_service_find_applications(application_service, applic
         ],
     )
 
-    page = await application_service.find_applications(limit=1, next_page_token='Mg==')
+    page = await application_service.find_applications(limit=1, next_page_token="Mg==")
 
     assert page == Page(
         limit=1,

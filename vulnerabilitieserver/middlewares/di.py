@@ -13,8 +13,8 @@ class Container:
     def set(self, key, value):
         self.services[key] = value
 
-    def add(self, value):
-        self.services[type(value)] = value
+    def add(self, value, key=None):
+        self.services[key or type(value)] = value
         return value
 
 

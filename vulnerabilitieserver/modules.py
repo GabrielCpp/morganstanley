@@ -8,8 +8,12 @@ import httpx
 def build_container():
     container = Container()
 
-    application_repository = container.add(io.Repository[models.Application]())
-    dependencies_repository = container.add(io.Repository[models.Dependency]())
+    application_repository = container.add(
+        io.Repository[models.Application](), key=io.Repository[models.Application]
+    )
+    dependencies_repository = container.add(
+        io.Repository[models.Dependency](), key=io.Repository[models.Dependency]
+    )
     cache = container.add(io.Cache[models.Vulnerability]())
     http_client = container.add(httpx.AsyncClient(http2=True))
     os_dev_client = container.add(io.OsvDevClient(http_client))

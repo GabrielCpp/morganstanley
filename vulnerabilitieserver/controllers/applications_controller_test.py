@@ -1,7 +1,9 @@
 import io
+import pytest
 import json
-from fastapi.testclient import TestClient
 from vulnerabilitieserver.main import app
+from vulnerabilitieserver.models import Application
+from vulnerabilitieserver.io import Repository
 
 
 def test_list_applications_without_application(test_client):
@@ -33,3 +35,26 @@ def test_create_application(test_client):
     )
 
     assert response.status_code == 200
+
+
+@pytest.mark.asyncio
+async def test_get_application_dependencies(test_client, container):
+    # First, create an application
+    applications = container.get(Repository[Application])
+    application = await applications.add(
+        Application(
+            name="test",
+            version="3.5.7",
+            description="test app",
+            requirements=[],
+            is_processing_dependencies=False,
+        )
+    )
+
+    dep_response = test_client.get(
+        f"/api/v1/applications/{application.id}/dependencies"
+    )
+
+    assert dep_response.status_code == 200
+    payload = dep_response.json()
+    assert payload == {'limit': 50, 'next_page_token': None, 'data': []}
