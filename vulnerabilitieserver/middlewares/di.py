@@ -8,13 +8,14 @@ class Container:
         self.services = {}
 
     def get(self, key):
-        return self.services.get(key)
+        return self.services[key]
 
     def set(self, key, value):
         self.services[key] = value
 
     def add(self, value):
         self.services[type(value)] = value
+        return value
 
 
 class ContainerMiddleware(BaseHTTPMiddleware):
