@@ -20,7 +20,7 @@ pip install -r requirements-test.txt
 
 3. Start the server in dev mode
 ```
-python vulnerabilitieserver/main.py
+make dev
 ```
 
 
