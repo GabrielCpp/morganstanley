@@ -1,6 +1,3 @@
-"# morganstanley" 
-
-
 # Setup the project 
 
 Ensure you have python 3.12.10 installed.
@@ -26,5 +23,4 @@ pip install -r requirements-test.txt
 python vulnerabilitieserver/main.py
 ```
 
-# Run the production instance
 
